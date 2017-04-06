@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Automatic Entity Labels.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function auto_entitylabel_uninstall() {
+  \Drupal::configFactory()->getEditable('auto_entitylabel.settings')->delete();
+}
