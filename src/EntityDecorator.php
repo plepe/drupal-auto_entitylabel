@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\auto_entitylabel\EntityDecorator.
- */
-
 namespace Drupal\auto_entitylabel;
 
 use Drupal\Core\Config\ConfigFactoryInterface;

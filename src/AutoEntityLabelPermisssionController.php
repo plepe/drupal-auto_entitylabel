@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\auto_entitylabel\AutoEntityLabelPermisssionController.
- */
-
 namespace Drupal\auto_entitylabel;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;

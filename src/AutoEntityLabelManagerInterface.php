@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\auto_entitylabel\AutoEntityLabelManagerInterface.
- */
-
 namespace Drupal\auto_entitylabel;
 
 /**
