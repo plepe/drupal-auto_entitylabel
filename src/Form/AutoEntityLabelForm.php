@@ -145,6 +145,9 @@ class AutoEntityLabelForm extends ConfigFormBase {
         '#dialog' => TRUE,
       ];
     }
+    else {
+      $form['auto_entitylabel'][$key . '_pattern']['#description'] .= ' ' . $this->t('To get a list of available tokens install <a href=":drupal-token" target="blank">Token</a> module.', [':drupal-token' => 'https://www.drupal.org/project/token']);
+    }
 
     $form['auto_entitylabel'][$key . '_php'] = [
       '#access' => \Drupal::currentUser()->hasPermission('use PHP for auto entity labels'),
