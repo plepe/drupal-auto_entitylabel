@@ -55,4 +55,4 @@ Current maintainers:
  * Benedikt Forchhammer (bforchhammer) - https://www.drupal.org/user/216396
  * Pravin raj (Pravin Ajaaz) - https://www.drupal.org/user/2910049
  * Purushotam Rai (purushotam.rai) - https://www.drupal.org/user/3193859
- * Renato Gonçalves (renatog) - https://www.drupal.org/user/3326031
+ * Renato Gonçalves (RenatoG) - https://www.drupal.org/user/3326031
