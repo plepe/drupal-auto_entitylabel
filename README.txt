@@ -45,7 +45,9 @@ information.
 CONFIGURATION
 -------------
 
-There is no configuration.
+ * Configure in Structure » Automatic label
+
+  Select the Content type and input values in "Pattern for the label" field.
 
 
 MAINTAINERS
