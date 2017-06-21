@@ -15,8 +15,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @property \Drupal\Core\Config\ConfigFactoryInterface config_factory
  * @property \Drupal\Core\Entity\EntityTypeManagerInterface entity_manager
- * @property  String entity_type_parameter
- * @property  String entity_type_id
+ * @property String entity_type_parameter
+ * @property String entity_type_id
  * @property \Drupal\auto_entitylabel\AutoEntityLabelManager auto_entity_label_manager
  * @package Drupal\auto_entitylabel\Controller
  */
@@ -35,13 +35,18 @@ class AutoEntityLabelForm extends ConfigFormBase {
 
   protected $entitymanager;
 
+  // @codingStandardsIgnoreLine
   protected $route_match;
 
   /**
    * AutoEntityLabelController constructor.
+   *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   Config Factory.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_manager
+   *   Entity Manager.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   Route Match.
    */
   public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_manager, RouteMatchInterface $route_match) {
     parent::__construct($config_factory);
@@ -52,9 +57,8 @@ class AutoEntityLabelForm extends ConfigFormBase {
     $this->entity_type_parameter = array_shift($array_keys);
     $entity_type = $this->route_match->getParameter($this->entity_type_parameter);
     $this->entity_type_id = $entity_type->id();
-    $this->entity_type_provider =  $entity_type->getEntityType()->getProvider();
+    $this->entity_type_provider = $entity_type->getEntityType()->getProvider();
   }
-
 
   /**
    * Gets the configuration names that will be editable.
@@ -160,7 +164,6 @@ class AutoEntityLabelForm extends ConfigFormBase {
     return parent::buildForm($form, $form_state);
   }
 
-
   /**
    * {@inheritdoc}
    */
@@ -172,4 +175,5 @@ class AutoEntityLabelForm extends ConfigFormBase {
     $config->save();
     parent::submitForm($form, $form_state);
   }
+
 }

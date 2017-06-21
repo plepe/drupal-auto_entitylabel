@@ -41,4 +41,5 @@ interface AutoEntityLabelManagerInterface {
    *   Returns true if the label should be automatically generated.
    */
   public function autoLabelNeeded();
+
 }

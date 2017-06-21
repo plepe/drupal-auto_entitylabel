@@ -5,7 +5,6 @@ namespace Drupal\auto_entitylabel;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\Config\Entity\ConfigEntityType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -40,9 +39,10 @@ class AutoEntityLabelPermissionController implements ContainerInjectionInterface
   }
 
   /**
-   * Returns an array of auto_entitylabel permissions
+   * Returns an array of auto_entitylabel permissions.
    *
    * @return array
+   *   Array with permissions.
    */
   public function autoEntityLabelPermissions() {
     $permissions = [];

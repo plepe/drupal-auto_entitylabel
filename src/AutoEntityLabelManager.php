@@ -8,6 +8,9 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Utility\Token;
 
+/**
+ * Class for Auto Entity Label Manager.
+ */
 class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
   use StringTranslationTrait;
 
@@ -29,7 +32,7 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
   /**
    * The content entity.
    *
-   * @var ContentEntityInterface
+   * @var \Drupal\Core\Entity\ContentEntityInterface
    */
   protected $entity;
 
@@ -38,6 +41,7 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
    *
    * @var string
    */
+  // @codingStandardsIgnoreLine
   protected $entity_type;
 
   /**
@@ -45,6 +49,7 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
    *
    * @var string
    */
+  // @codingStandardsIgnoreLine
   protected $entity_bundle;
 
   /**
@@ -52,6 +57,7 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
    *
    * @var bool
    */
+  // @codingStandardsIgnoreLine
   protected $auto_label_applied = FALSE;
 
   /**
@@ -90,7 +96,7 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   Configuration factory.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   Entity type manager
+   *   Entity type manager.
    * @param \Drupal\Core\Utility\Token $token
    *   Token manager.
    */
@@ -220,7 +226,7 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
    *
    * @param string $pattern
    *   Label pattern. May contain tokens.
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   * @param object $entity
    *   Content entity.
    *
    * @return string
@@ -229,10 +235,10 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
   protected function generateLabel($pattern, $entity) {
     $entity_type = $entity->getEntityType()->id();
     $output = $this->token
-      ->replace($pattern, array($entity_type => $entity), array(
+      ->replace($pattern, [$entity_type => $entity], [
         'sanitize' => FALSE,
-        'clear' => TRUE
-      ));
+        'clear' => TRUE,
+      ]);
 
     // Evaluate PHP.
     if ($this->getConfig('php')) {
@@ -251,6 +257,7 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
    *   The configuration value to get.
    *
    * @return \Drupal\Core\Config\ImmutableConfig
+   *   Return Config.
    */
   protected function getConfig($value) {
     if (!isset($this->config)) {
@@ -270,10 +277,10 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
     $content_type = $this->getBundleLabel();
 
     if ($this->entity->id()) {
-      $label = $this->t('@type @id', array(
+      $label = $this->t('@type @id', [
         '@type' => $content_type,
         '@id' => $this->entity->id(),
-      ));
+      ]);
     }
     else {
       $label = $content_type;
@@ -285,9 +292,9 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
   /**
    * Evaluates php code and passes the entity to it.
    *
-   * @param $code
+   * @param string $code
    *   PHP code to evaluate.
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   * @param object $entity
    *   Content entity to pa ss through to the PHP script.
    *
    * @return string
@@ -295,6 +302,7 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
    */
   protected function evalLabel($code, $entity) {
     ob_start();
+    // @codingStandardsIgnoreLine
     print eval('?>' . $code);
     $output = ob_get_contents();
     ob_end_clean();
@@ -304,21 +312,24 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
 
   /**
    * Constructs the list of options for the given bundle.
+   *
+   * @codingStandardsIgnoreStart
    */
   public static function auto_entitylabel_options($entity_type, $bundle_name) {
-    $options = array(
+    // @codingStandardsIgnoreEnd
+    $options = [
       'auto_entitylabel_disabled' => t('Disabled'),
-    );
+    ];
     if (self::auto_entitylabel_entity_label_visible($entity_type)) {
-      $options += array(
+      $options += [
         'auto_entitylabel_enabled' => t('Automatically generate the label and hide the label field'),
         'auto_entitylabel_optional' => t('Automatically generate the label if the label field is left empty'),
-      );
+      ];
     }
     else {
-      $options += array(
+      $options += [
         'auto_entitylabel_enabled' => t('Automatically generate the label'),
-      );
+      ];
     }
     return $options;
   }
@@ -326,24 +337,26 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
   /**
    * Check if given entity bundle has a visible label on the entity form.
    *
-   * @param $entity_type
+   * @param string $entity_type
    *   The entity type.
-   * @param $bundle_name
-   *   The name of the bundle.
    *
-   * @return
+   * @return bool
    *   TRUE if the label is rendered in the entity form, FALSE otherwise.
    *
    * @todo
    *   Find a generic way of determining the result of this function. This
    *   will probably require access to more information about entity forms
    *   (entity api module?).
+   *
+   * @codingStandardsIgnoreStart
    */
   public static function auto_entitylabel_entity_label_visible($entity_type) {
-    $hidden = array(
+    // @codingStandardsIgnoreEnd
+    $hidden = [
       'profile2' => TRUE,
-    );
+    ];
 
     return empty($hidden[$entity_type]);
   }
+
 }
