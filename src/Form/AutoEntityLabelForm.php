@@ -4,6 +4,8 @@ namespace Drupal\auto_entitylabel\Form;
 
 use Drupal\auto_entitylabel\AutoEntityLabelManager;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -39,6 +41,20 @@ class AutoEntityLabelForm extends ConfigFormBase {
   protected $route_match;
 
   /**
+   * Module handler.
+   *
+   * @var Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  private $moduleHandler;
+
+  /**
+   * User.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  private $user;
+
+  /**
    * AutoEntityLabelController constructor.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -47,8 +63,12 @@ class AutoEntityLabelForm extends ConfigFormBase {
    *   Entity Manager.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   Route Match.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
+   *   Module Handler.
+   * @param \Drupal\Core\Session\AccountInterface $user
+   *   Account Interface.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_manager, RouteMatchInterface $route_match) {
+  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_manager, RouteMatchInterface $route_match, ModuleHandlerInterface $moduleHandler, AccountInterface $user) {
     parent::__construct($config_factory);
     $this->entitymanager = $entity_manager;
     $this->route_match = $route_match;
@@ -58,6 +78,8 @@ class AutoEntityLabelForm extends ConfigFormBase {
     $entity_type = $this->route_match->getParameter($this->entity_type_parameter);
     $this->entity_type_id = $entity_type->id();
     $this->entity_type_provider = $entity_type->getEntityType()->getProvider();
+    $this->moduleHandler = $moduleHandler;
+    $this->user = $user;
   }
 
   /**
@@ -90,7 +112,9 @@ class AutoEntityLabelForm extends ConfigFormBase {
     return new static (
       $container->get('config.factory'),
       $container->get('entity.manager'),
-      $container->get('current_route_match')
+      $container->get('current_route_match'),
+      $container->get('module_handler'),
+      $container->get('current_user')
     );
   }
 
@@ -133,15 +157,14 @@ class AutoEntityLabelForm extends ConfigFormBase {
 
     // Don't allow editing of the pattern if PHP is used, but the users lacks
     // permission for PHP.
-    if ($config->get($key . '_php') && !\Drupal::currentUser()->hasPermission('use PHP for auto entity labels')) {
+    if ($config->get($key . '_php') && !$this->user->hasPermission('use PHP for auto entity labels')) {
       $form['auto_entitylabel'][$key . '_pattern']['#disabled'] = TRUE;
       $form['auto_entitylabel'][$key . '_pattern']['#description'] = $this->t('You are not allowed the configure the pattern for the label, because you do not have the %permission permission.', ['%permission' => $this->t('Use PHP for automatic entity label patterns')]);
     }
 
     // Display the list of available placeholders if token module is installed.
-    $module_handler = \Drupal::moduleHandler();
-    if ($module_handler->moduleExists('token')) {
-      $token_info = $module_handler->invoke($this->entity_type_provider, 'token_info');
+    if ($this->moduleHandler->moduleExists('token')) {
+      $token_info = $this->moduleHandler->invoke($this->entity_type_provider, 'token_info');
       $token_types = isset($token_info['types']) ? array_keys($token_info['types']) : [];
       $form['auto_entitylabel']['token_help'] = [
         '#theme' => 'token_tree_link',
@@ -154,7 +177,7 @@ class AutoEntityLabelForm extends ConfigFormBase {
     }
 
     $form['auto_entitylabel'][$key . '_php'] = [
-      '#access' => \Drupal::currentUser()->hasPermission('use PHP for auto entity labels'),
+      '#access' => $this->user->hasPermission('use PHP for auto entity labels'),
       '#type' => 'checkbox',
       '#title' => $this->t('Evaluate PHP in pattern.'),
       '#description' => $this->t('Put PHP code above that returns your string, but make sure you surround code in <code>&lt;?php</code> and <code>?&gt;</code>. Note that <code>$entity</code> and <code>$language</code> are available and can be used by your code.'),
