@@ -6,6 +6,19 @@
  */
 
 /**
+ * Implements hook_update_N().
+ */
+function auto_entitylabel_update_8001() {
+  $config = \Drupal::configFactory()->getEditable('auto_entitylabel.settings');
+  foreach (['submit', 'form_build_id', 'form_token', 'form_id', 'op'] as $key) {
+    if ($config->get($key)) {
+      $config->clear($key);
+    }
+  }
+  $config->save();
+}
+
+/**
  * Implements hook_uninstall().
  */
 function auto_entitylabel_uninstall() {

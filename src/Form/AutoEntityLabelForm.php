@@ -192,6 +192,7 @@ class AutoEntityLabelForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->configFactory->getEditable('auto_entitylabel.settings');
+    $form_state->cleanValues();
     foreach ($form_state->getValues() as $key => $value) {
       $config->set($key, $value);
     }
