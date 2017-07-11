@@ -7,6 +7,7 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Utility\Token;
+use Drupal\Component\Utility\Html;
 
 /**
  * Class for Auto Entity Label Manager.
@@ -234,16 +235,19 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
    */
   protected function generateLabel($pattern, $entity) {
     $entity_type = $entity->getEntityType()->id();
-    $output = $this->token
-      ->replace($pattern, [$entity_type => $entity], [
-        'sanitize' => FALSE,
-        'clear' => TRUE,
-      ]);
+    $output = $this->token->replace($pattern,
+      [$entity_type => $entity],
+      ['clear' => TRUE]
+    );
 
     // Evaluate PHP.
     if ($this->getConfig('php')) {
       $output = $this->evalLabel($output, $this->entity);
     }
+
+    // Decode HTML entities, returning them to their original UTF-8 characters.
+    $output = Html::decodeEntities($output);
+
     // Strip tags.
     $output = preg_replace('/[\t\n\r\0\x0B]/', '', strip_tags($output));
 
