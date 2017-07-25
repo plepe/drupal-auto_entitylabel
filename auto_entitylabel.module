@@ -5,7 +5,7 @@
  * Allows hiding of entity label fields and automatic label creation.
  */
 
-use Drupal\auto_entitylabel\AutoEntityLabelManagerInterface;
+use Drupal\auto_entitylabel\AutoEntityLabelManager;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Config\Entity\ConfigEntityType;
@@ -65,43 +65,66 @@ function auto_entitylabel_entity_type_alter(array &$entity_types) {
  * Implements hook_form_alter().
  */
 function auto_entitylabel_form_alter(&$form, FormStateInterface $form_state) {
-  if (isset($form['#entity_builders']) && empty($form['#auto_entitylabel_processed'])) {
-    $decorator = \Drupal::service('auto_entitylabel.entity_decorator');
-    $form_entity = $form_state->getFormObject()->getEntity();
-    if ($form_entity instanceof ContentEntityInterface) {
-      /** @var \Drupal\auto_entitylabel\AutoEntityLabelManager $entity */
-      $entity = $decorator->decorate($form_state->getFormObject()->getEntity());
-
-      if ($entity instanceof AutoEntityLabelManagerInterface) {
-        if ($entity->hasAutoLabel()) {
-          $label = $entity->getLabelName();
-          $widget = &$form[$label]['widget'][0];
-          // Hide the label field. It will be automatically generated in
-          // hook_entity_presave().
-          $widget['value']['#type'] = 'hidden';
-          $widget['value']['#required'] = FALSE;
-          if (empty($widget['value']['#default_value'])) {
-            $widget['value']['#default_value'] = '%AutoEntityLabel%';
-          }
-        }
-        else {
-          if ($entity->hasOptionalAutoLabel()) {
-            $label = $entity->getLabelName();
-            $widget = &$form[$label]['widget'][0];
-            // Allow label field to be empty. It will be automatically generated
-            // in hook_entity_presave().
-            $widget['value']['#required'] = FALSE;
-          }
-          $label = $entity->getLabelName();
-          $widget = &$form[$label]['widget'][0];
-          // Allow label field to be empty. It will be automatically generated
-          // in hook_entity_presave().
-          $widget['value']['#required'] = FALSE;
-        }
-      }
-
-      $form['#auto_entitylabel_processed'] = TRUE;
+  if (isset($form['#entity_builders'])) {
+    $entity = $form_state->getFormObject()->getEntity();
+    if ($entity instanceof ContentEntityInterface) {
+      auto_entitylabel_prepare_entityform($form, $entity);
     }
+  }
+}
+
+/**
+ * Implements hook_inline_entity_form_entity_form_alter().
+ */
+function auto_entitylabel_inline_entity_form_entity_form_alter(&$form, &$form_state) {
+  $entity = $form['#entity'];
+  auto_entitylabel_prepare_entityform($form, $entity);
+}
+
+/**
+ * Prepares the label replacement in the entity form.
+ *
+ * @param array $form
+ *   Form array.
+ * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+ *   The entity which title will be replaced.
+ *
+ * @codingStandardsIgnoreStart
+ */
+function auto_entitylabel_prepare_entityform(&$form, ContentEntityInterface $entity) {
+  // @codingStandardsIgnoreEnd
+  if (empty($form['#auto_entitylabel_processed'])) {
+    $decorator = \Drupal::service('auto_entitylabel.entity_decorator');
+    /** @var \Drupal\auto_entitylabel\AutoEntityLabelManager $entity */
+    $entity = $decorator->decorate($entity);
+    $label = $entity->getLabelName();
+    $widget = &$form[$label]['widget'][0];
+
+    switch ($entity->getStatus()) {
+      case AutoEntityLabelManager::ENABLED:
+        // Hide the label field. It will be automatically generated in
+        // hook_entity_presave().
+        $widget['value']['#type'] = 'hidden';
+        $widget['value']['#required'] = FALSE;
+        if (empty($widget['value']['#default_value'])) {
+          $widget['value']['#default_value'] = '%AutoEntityLabel%';
+        }
+        break;
+
+      case AutoEntityLabelManager::OPTIONAL:
+        // Allow label field to be empty. It will be automatically generated
+        // in hook_entity_presave().
+        $widget['value']['#required'] = FALSE;
+        break;
+
+      case AutoEntityLabelManager::PREFILLED:
+        if (empty($widget['value']['#default_value'])) {
+          $widget['value']['#default_value'] = $entity->getPattern();
+        }
+        break;
+    }
+
+    $form['#auto_entitylabel_processed'] = TRUE;
   }
 }
 

@@ -134,6 +134,7 @@ class AutoEntityLabelForm extends ConfigFormBase {
       AutoEntityLabelManager::DISABLED => $this->t('Disabled'),
       AutoEntityLabelManager::ENABLED => $this->t('Automatically generate the label and hide the label field'),
       AutoEntityLabelManager::OPTIONAL => $this->t('Automatically generate the label if the label field is left empty'),
+      AutoEntityLabelManager::PREFILLED => $this->t('Automatically prefill the label'),
     ];
 
     $form['auto_entitylabel'] = [

@@ -31,6 +31,11 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
   const OPTIONAL = 2;
 
   /**
+   * Automatic label is prefilled.
+   */
+  const PREFILLED = 3;
+
+  /**
    * The content entity.
    *
    * @var \Drupal\Core\Entity\ContentEntityInterface
@@ -133,8 +138,7 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
       throw new \Exception('This entity has no label.');
     }
 
-    $pattern = $this->getConfig('pattern') ?: '';
-    $pattern = trim($pattern);
+    $pattern = $this->getPattern();
 
     if ($pattern) {
       $label = $this->generateLabel($pattern, $this->entity);
@@ -173,6 +177,22 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
     $required = $this->hasAutoLabel();
     $optional = $this->hasOptionalAutoLabel() && empty($this->entity->label());
     return $not_applied && ($required || $optional);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getStatus() {
+    return $this->getConfig('status');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPattern() {
+    $pattern = $this->getConfig('pattern') ?: '';
+    $pattern = trim($pattern);
+    return $pattern;
   }
 
   /**

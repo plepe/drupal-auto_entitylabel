@@ -42,4 +42,20 @@ interface AutoEntityLabelManagerInterface {
    */
   public function autoLabelNeeded();
 
+  /**
+   * Returns status of automatic entity label.
+   *
+   * @return bool
+   *   Status value.
+   */
+  public function getStatus();
+
+  /**
+   * Returns pattern for the label.
+   *
+   * @return string
+   *   Pattern value.
+   */
+  public function getPattern();
+
 }

@@ -4,4 +4,4 @@ auto_entitylabel.settings:
     _controller: 'Drupal\auto_entitylabel\Controller\AutoEntityLabelController::getContentTypesItems'
     _title: 'Automatic label'
   requirements:
-    _permission: 'access administration pages'
+    _permission: 'administer site configuration'
