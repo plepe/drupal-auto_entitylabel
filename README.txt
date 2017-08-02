@@ -45,9 +45,11 @@ information.
 CONFIGURATION
 -------------
 
- * Configure in Structure » Automatic label
+ * After installing, go to: Administration » Structure » Content Types
 
-  Select the Content type and input values in "Pattern for the label" field.
+ * In the drop down select: "Manage automatic entity labels"
+
+ * Select which option for client and create a pattern
 
 
 MAINTAINERS
