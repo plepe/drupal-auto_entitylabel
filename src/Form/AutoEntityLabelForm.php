@@ -154,6 +154,7 @@ class AutoEntityLabelForm extends ConfigFormBase {
       '#title' => $this->t('Pattern for the label'),
       '#description' => $this->t('Leave blank for using the per default generated label. Otherwise this string will be used as label. Use the syntax [token] if you want to insert a replacement pattern.'),
       '#default_value' => $config->get($key . '_pattern'),
+      '#attributes' => array('class' => array('pattern-label')),
     ];
 
     // Don't allow editing of the pattern if PHP is used, but the users lacks
@@ -184,6 +185,8 @@ class AutoEntityLabelForm extends ConfigFormBase {
       '#description' => $this->t('Put PHP code above that returns your string, but make sure you surround code in <code>&lt;?php</code> and <code>?&gt;</code>. Note that <code>$entity</code> and <code>$language</code> are available and can be used by your code.'),
       '#default_value' => $config->get($key . '_php'),
     ];
+
+    $form['#attached']['library'][] = 'auto_entitylabel/auto_entitylabel.admin';
 
     return parent::buildForm($form, $form_state);
   }
