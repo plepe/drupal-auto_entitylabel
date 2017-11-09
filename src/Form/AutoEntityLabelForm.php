@@ -186,6 +186,13 @@ class AutoEntityLabelForm extends ConfigFormBase {
       '#default_value' => $config->get($key . '_php'),
     ];
 
+    $form['auto_entitylabel'][$key . '_escape'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Escape special characters.'),
+      '#description' => $this->t('Check this to escape all special characters.'),
+      '#default_value' => $config->get($key . '_escape'),
+    ];
+
     $form['#attached']['library'][] = 'auto_entitylabel/auto_entitylabel.admin';
 
     return parent::buildForm($form, $form_state);
