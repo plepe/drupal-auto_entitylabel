@@ -294,10 +294,9 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
    */
   protected function getConfig($value) {
     if (!isset($this->config)) {
-      $this->config = $this->configFactory->get('auto_entitylabel.settings');
+      $this->config = $this->configFactory->get('auto_entitylabel.settings.' . $this->entity_type . '.' . $this->entity_bundle);
     }
-    $key = $this->bundle_entity_type . '_' . $this->entity_bundle;
-    return $this->config->get($key . '_' . $value);
+    return $this->config->get($value);
   }
 
   /**
