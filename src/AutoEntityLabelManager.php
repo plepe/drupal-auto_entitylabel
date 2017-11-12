@@ -172,11 +172,19 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
   /**
    * {@inheritdoc}
    */
+  public function hasPrefilledAutoLabel() {
+    return $this->getConfig('status') == self::PREFILLED;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function autoLabelNeeded() {
     $not_applied = empty($this->auto_label_applied);
     $required = $this->hasAutoLabel();
     $optional = $this->hasOptionalAutoLabel() && empty($this->entity->label());
-    return $not_applied && ($required || $optional);
+    $prefilled = $this->hasPrefilledAutoLabel();
+    return $not_applied && ($required || $optional || $prefilled);
   }
 
   /**
