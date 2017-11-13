@@ -119,7 +119,7 @@ function auto_entitylabel_prepare_entityform(&$form, ContentEntityInterface $ent
 
       case AutoEntityLabelManager::PREFILLED:
         if (empty($widget['value']['#default_value'])) {
-          $widget['value']['#default_value'] = $entity->getPattern();
+          $widget['value']['#default_value'] = $entity->setLabel();
         }
         break;
     }
