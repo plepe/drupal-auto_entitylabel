@@ -169,6 +169,21 @@ class AutoEntityLabelForm extends ConfigFormBase {
       AutoEntityLabelManager::PREFILLED => $this->t('Automatically prefill the label'),
     ];
 
+    // Create an array for descrition of the options.
+    $options_description = [
+      AutoEntityLabelManager::DISABLED => [
+        '#description' => $this->t('Selecting this option will disable the auto labels for the entity'),
+      ],
+      AutoEntityLabelManager::ENABLED => [
+        '#description' => $this->t('Selecting this option will hide the title field and will generate a new option based on the patern provided below'),
+      ],
+      AutoEntityLabelManager::OPTIONAL => [
+        '#description' => $this->t('Selecting this option will make the label field unrequired and will generate a label if the label field is left empty'),
+      ],
+      AutoEntityLabelManager::PREFILLED => [
+        '#description' => $this->t('Selecting this option will prefill the label field with the generated pattern provided below.This option provides limited token support because it only prefills the label and it will not be able to replace all the tokens like current node based tokens for ex: [node:nid] because that token has not been generated yet.'),
+      ],
+    ];
     $form['auto_entitylabel'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Automatic label generation for @type', ['@type' => $this->entityBundle]),
@@ -180,6 +195,7 @@ class AutoEntityLabelForm extends ConfigFormBase {
       '#default_value' => $config->get('status') ?: 0,
       '#options' => $options,
     ];
+    $form['auto_entitylabel']['status'] += $options_description;
 
     $form['auto_entitylabel']['pattern'] = [
       '#type' => 'textarea',
