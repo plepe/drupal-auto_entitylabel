@@ -35,27 +35,14 @@ function auto_entitylabel_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_entity_type_alter().
  *
  * Adds the Auto Label tab to the entity configuration page.
+ *
+ * @param \Drupal\Core\Entity\EntityTypeInterface[] $entity_types
  */
 function auto_entitylabel_entity_type_alter(array &$entity_types) {
   $module_handler = \Drupal::moduleHandler();
   // @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[].
   foreach ($entity_types as $entity_type) {
-    // Support core entity types only. Contrib and custom entity types should
-    // use a hook or service (@todo https://www.drupal.org/node/2829571).
-    $core_entity = FALSE;
-    $module_name = $entity_type->getProvider();
-    if ($module_name != 'core') {
-      // Identify core entity types that are provided by modules.
-      $module = $module_handler->getModule($module_name);
-      if (preg_match('/^core/', $module->getPath())) {
-        $core_entity = TRUE;
-      }
-    }
-    else {
-      // Some core entity types are not provided by a module.
-      $core_entity = TRUE;
-    }
-    if ($core_entity && $entity_type instanceof ConfigEntityType && $entity_type->hasLinkTemplate('edit-form')) {
+    if ($entity_type->getBundleOf() && $entity_type->hasLinkTemplate('edit-form')) {
       $entity_type->setLinkTemplate('auto-label', $entity_type->getLinkTemplate('edit-form') . "/auto-label");
     }
   }
