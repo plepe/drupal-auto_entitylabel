@@ -147,7 +147,7 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
       $label = $this->getAlternativeLabel();
     }
 
-    $label = substr($label, 0, 255);
+    $label = mb_substr($label, 0, 255);
     $label_name = $this->getLabelName();
     $this->entity->$label_name->setValue($label);
 
