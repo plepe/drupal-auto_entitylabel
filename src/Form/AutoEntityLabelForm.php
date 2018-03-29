@@ -230,7 +230,7 @@ class AutoEntityLabelForm extends ConfigFormBase {
       '#access' => $this->user->hasPermission('use PHP for auto entity labels'),
       '#type' => 'checkbox',
       '#title' => $this->t('Evaluate PHP in pattern.'),
-      '#description' => $this->t('Put PHP code above that returns your string, but make sure you surround code in <code>&lt;?php</code> and <code>?&gt;</code>. Note that <code>$entity</code> and <code>$language</code> are available and can be used by your code.'),
+      '#description' => $this->t('Put PHP code above that returns your string, but make sure you surround code in <code>&lt;?php</code> and <code>?&gt;</code>. Note that <code>$entity</code> and <code>$language</code> are available and can be used by your code.See the help section for an example'),
       '#default_value' => $config->get('php'),
     ];
 
