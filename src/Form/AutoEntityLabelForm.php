@@ -184,6 +184,13 @@ class AutoEntityLabelForm extends ConfigFormBase {
         '#description' => $this->t('Selecting this option will prefills the label field with the generated pattern provided below. This option provides limited token support because it only prefills the label and it will not be able to replace all the tokens like current node based tokens for ex: [node:nid] because that token has not been generated yet.'),
       ],
     ];
+    // Shared across most of the settings on this page.
+    $invisible_state = [
+      'invisible' => [
+        ':input[name="status"]' => ['value' => AutoEntityLabelManager::DISABLED],
+      ],
+    ];
+
     $form['auto_entitylabel'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Automatic label generation for @type', ['@type' => $this->entityBundle]),
@@ -203,6 +210,7 @@ class AutoEntityLabelForm extends ConfigFormBase {
       '#description' => $this->t('Leave blank for using the per default generated label. Otherwise this string will be used as label. Use the syntax [token] if you want to insert a replacement pattern.'),
       '#default_value' => $config->get('pattern') ?: '',
       '#attributes' => ['class' => ['pattern-label']],
+      '#states' => $invisible_state,
     ];
 
     // Don't allow editing of the pattern if PHP is used, but the users lacks
@@ -217,9 +225,14 @@ class AutoEntityLabelForm extends ConfigFormBase {
       $token_info = $this->moduleHandler->invoke($this->entityTypeProvider, 'token_info');
       $token_types = isset($token_info['types']) ? array_keys($token_info['types']) : [];
       $form['auto_entitylabel']['token_help'] = [
-        '#theme' => 'token_tree_link',
-        '#token_types' => $token_types,
-        '#dialog' => TRUE,
+        // #states needs a container to work, so put the token replacement link inside one.
+        '#type' => 'container',
+        '#states' => $invisible_state,
+        'token_link' => [
+          '#theme' => 'token_tree_link',
+          '#token_types' => $token_types,
+          '#dialog' => TRUE,
+        ],
       ];
     }
     else {
@@ -232,6 +245,7 @@ class AutoEntityLabelForm extends ConfigFormBase {
       '#title' => $this->t('Evaluate PHP in pattern.'),
       '#description' => $this->t('Put PHP code above that returns your string, but make sure you surround code in <code>&lt;?php</code> and <code>?&gt;</code>. Note that <code>$entity</code> and <code>$language</code> are available and can be used by your code.See the help section for an example'),
       '#default_value' => $config->get('php'),
+      '#states' => $invisible_state,
     ];
 
     $form['auto_entitylabel']['escape'] = [
@@ -239,6 +253,7 @@ class AutoEntityLabelForm extends ConfigFormBase {
       '#title' => $this->t('Escape special characters.'),
       '#description' => $this->t('Check this to escape all special characters.'),
       '#default_value' => $config->get('escape'),
+      '#states' => $invisible_state,
     ];
 
     $form['#attached']['library'][] = 'auto_entitylabel/auto_entitylabel.admin';
