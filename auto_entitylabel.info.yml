@@ -2,5 +2,4 @@ name: Automatic Entity Labels
 description: Allows hiding of entity label fields and automatic label creation.
 package: Entity
 type: module
-configure: auto_entitylabel.settings
 core: 8.x
