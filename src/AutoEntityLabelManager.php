@@ -272,6 +272,9 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
     $pattern = !empty($this->getConfig('escape')) ? '/[^a-zA-Z0-9\s]|[\t\n\r\0\x0B]/' : '/[\t\n\r\0\x0B]/';
     $output = preg_replace($pattern, '', strip_tags($output));
 
+    // Invoke hook_auto_entitylabel_label_alter().
+    \Drupal::moduleHandler()->alter('auto_entitylabel_label', $output, clone $entity);
+
     return $output;
   }
 
