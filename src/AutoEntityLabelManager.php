@@ -273,7 +273,8 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
     $output = preg_replace($pattern, '', strip_tags($output));
 
     // Invoke hook_auto_entitylabel_label_alter().
-    \Drupal::moduleHandler()->alter('auto_entitylabel_label', $output, clone $entity);
+    $entity_clone = clone $entity;
+    \Drupal::moduleHandler()->alter('auto_entitylabel_label', $output, $entity_clone);
 
     return $output;
   }
