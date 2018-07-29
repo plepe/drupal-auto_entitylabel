@@ -13,7 +13,7 @@ auto_entitylabel.settings.*:
       label: 'Use PHP for auto entity labels'
     escape:
       type: boolean
-      label: 'Escape special characters'
+      label: 'Remove special characters'
     dependencies:
       type: config_dependencies
       label: 'Dependencies'

@@ -268,7 +268,7 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
     // Decode HTML entities, returning them to their original UTF-8 characters.
     $output = Html::decodeEntities($output);
 
-    // Strip tags and Escape special characters.
+    // Strip tags and Remove special characters.
     $pattern = !empty($this->getConfig('escape')) ? '/[^a-zA-Z0-9\s]|[\t\n\r\0\x0B]/' : '/[\t\n\r\0\x0B]/';
     $output = preg_replace($pattern, '', strip_tags($output));
 

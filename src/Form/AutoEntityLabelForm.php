@@ -250,8 +250,8 @@ class AutoEntityLabelForm extends ConfigFormBase {
 
     $form['auto_entitylabel']['escape'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Escape special characters.'),
-      '#description' => $this->t('Check this to escape all special characters.'),
+      '#title' => $this->t('Remove special characters.'),
+      '#description' => $this->t('Check this to remove all special characters.'),
       '#default_value' => $config->get('escape'),
       '#states' => $invisible_state,
     ];
