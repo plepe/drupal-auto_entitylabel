@@ -3,7 +3,7 @@
 namespace Drupal\auto_entitylabel\Routing;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Routing\Enhancer\RouteEnhancerInterface;
+use Drupal\Core\Routing\EnhancerInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Route;
  * Enhances Auto Entity Label routes by adding proper information about the
  * bundle name.
  */
-class RouteEnhancer implements RouteEnhancerInterface {
+class RouteEnhancer implements EnhancerInterface {
 
   /**
    * The entity manager.
