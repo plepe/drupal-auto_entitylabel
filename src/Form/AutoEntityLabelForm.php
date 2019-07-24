@@ -72,11 +72,11 @@ class AutoEntityLabelForm extends ConfigFormBase {
   protected $entityBundle;
 
   /**
-   * The entity provider machine name.
+   * The entity type that our config entity describes bundles of.
    *
    * @var string
    */
-  protected $entityTypeProvider;
+  protected $entityTypeBundleOf;
 
   /**
    * AutoEntityLabelController constructor.
@@ -101,7 +101,7 @@ class AutoEntityLabelForm extends ConfigFormBase {
     $this->entityType = array_shift($array_keys);
     $entity_type = $this->route_match->getParameter($this->entityType);
     $this->entityBundle = $entity_type->id();
-    $this->entityTypeProvider = $entity_type->getEntityType()->getProvider();
+    $this->entityTypeBundleOf = $entity_type->getEntityType()->getBundleOf();
     $this->moduleHandler = $moduleHandler;
     $this->user = $user;
   }
@@ -149,7 +149,7 @@ class AutoEntityLabelForm extends ConfigFormBase {
    *   The compiled config name.
    */
   protected function getConfigName() {
-    return 'auto_entitylabel.settings.' . $this->entityTypeProvider . '.' . $this->entityBundle;
+    return 'auto_entitylabel.settings.' . $this->entityTypeBundleOf . '.' . $this->entityBundle;
   }
 
   /**
@@ -222,15 +222,15 @@ class AutoEntityLabelForm extends ConfigFormBase {
 
     // Display the list of available placeholders if token module is installed.
     if ($this->moduleHandler->moduleExists('token')) {
-      $token_info = $this->moduleHandler->invoke($this->entityTypeProvider, 'token_info');
-      $token_types = isset($token_info['types']) ? array_keys($token_info['types']) : [];
+      // Special treatment for Core's taxonomy_vocabulary and taxonomy_term.
+      $token_type = strtr($this->entityTypeBundleOf, ['taxonomy_' => '']);
       $form['auto_entitylabel']['token_help'] = [
         // #states needs a container to work, so put the token replacement link inside one.
         '#type' => 'container',
         '#states' => $invisible_state,
         'token_link' => [
           '#theme' => 'token_tree_link',
-          '#token_types' => $token_types,
+          '#token_types' => [$token_type],
           '#dialog' => TRUE,
         ],
       ];
