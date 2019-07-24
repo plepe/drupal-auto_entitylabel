@@ -276,6 +276,10 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
     $entity_clone = clone $entity;
     \Drupal::moduleHandler()->alter('auto_entitylabel_label', $output, $entity_clone);
 
+    // Trim stray whitespace from beginning and end. Also converts 2 or more
+    // whitespace characters within label to a single space.
+    $output = preg_replace('/\s{2,}/', ' ', trim($output));
+
     return $output;
   }
 
