@@ -160,6 +160,30 @@ function auto_entitylabel_entity_presave(EntityInterface $entity) {
 }
 
 /**
+ * Implements hook_entity_insert().
+ */
+function auto_entitylabel_entity_insert(EntityInterface $entity) {
+  if ($entity instanceof ContentEntityInterface) {
+    $decorator = \Drupal::service('auto_entitylabel.entity_decorator');
+    /** @var \Drupal\auto_entitylabel\AutoEntityLabelManager $decorated_entity */
+    $decorated_entity = $decorator->decorate($entity);
+    if ($decorated_entity->hasLabel() && ($decorated_entity->hasAutoLabel() || $decorated_entity->hasOptionalAutoLabel())) {
+      // Store the old label.
+      $old_label = $entity->label();
+      // Update the entity label.
+      $decorated_entity->setLabel();
+      // Save it only if the title has changed.
+      if ($entity->label() != $old_label) {
+        if ($entity->getEntityType()->isRevisionable()) {
+          $entity->setNewRevision(FALSE);
+        }
+        $entity->save();
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_validation_constraint_alter().
  *
  * Override core NotNull constraint to allow entities that use Auto Entity
