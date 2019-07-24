@@ -260,11 +260,6 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
       ['clear' => TRUE]
     );
 
-    // Evaluate PHP.
-    if ($this->getConfig('php')) {
-      $output = $this->evalLabel($output, $this->entity);
-    }
-
     // Decode HTML entities, returning them to their original UTF-8 characters.
     $output = Html::decodeEntities($output);
 
@@ -319,27 +314,6 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
     }
 
     return $label;
-  }
-
-  /**
-   * Evaluates php code and passes the entity to it.
-   *
-   * @param string $code
-   *   PHP code to evaluate.
-   * @param object $entity
-   *   Content entity to pa ss through to the PHP script.
-   *
-   * @return string
-   *   String to use as label.
-   */
-  protected function evalLabel($code, $entity) {
-    ob_start();
-    // @codingStandardsIgnoreLine
-    print eval('?>' . $code);
-    $output = ob_get_contents();
-    ob_end_clean();
-
-    return $output;
   }
 
   /**

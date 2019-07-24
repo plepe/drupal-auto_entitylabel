@@ -25,8 +25,6 @@ function auto_entitylabel_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<p>' . t('Watch the <a href="@url_daily_dose_of_drupal" target="blank">Daily Dose of Drupal</a> screencast by <a href="@url_shane_thomas" target="blank">Shane Thomas</a> for a short introduction and demonstration of the module and some of its features. Demonstration made in D7 but can help a lot.', ['@url_daily_dose_of_drupal' => 'http://codekarate.com/daily-dose-of-drupal/drupal-7-automatic-entity-label-module', '@url_shane_thomas' => 'https://www.drupal.org/user/506260']) . '</p>';
       $output .= '<h3>' . t('Usage') . '</h3>';
       $output .= '<p>' . t('The configuration can be accessed with the <i>Manage automatic entity labels</i> operation or the <i>Automatic label</i> tab when editing entity types. For example, when configuring a node type, visit <i>Administration</i> » <i>Structure</i> » <i>Content types</i> (/admin/structure/types). You can also configure automatic labels for other entity types such as <i>Media<i>, in which case you would visit <i>Administration</i> » <i>Structure</i> » <i>Media</i> (/admin/structure/media).') . '</p>';
-      $output .= '<p>' . t('Advanced users can use PHP code for automatically generating labels. See below for an example.') . '</p>';
-      $output .= '<code>' . t('<?php $my_field="[node:body]"; if (empty($my_field)) { return \'<Body field is empty>\'; } else { return substr($my_field,0,35); // limit length } ?>') . '</code>';
       return $output;
   }
 }

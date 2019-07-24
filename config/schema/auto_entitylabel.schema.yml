@@ -8,9 +8,6 @@ auto_entitylabel.settings.*:
     pattern:
       type: string
       label: 'Pattern for the label'
-    php:
-      type: boolean
-      label: 'Use PHP for auto entity labels'
     escape:
       type: boolean
       label: 'Remove special characters'

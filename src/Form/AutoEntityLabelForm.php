@@ -213,13 +213,6 @@ class AutoEntityLabelForm extends ConfigFormBase {
       '#states' => $invisible_state,
     ];
 
-    // Don't allow editing of the pattern if PHP is used, but the users lacks
-    // permission for PHP.
-    if ($config->get('php') && !$this->user->hasPermission('use PHP for auto entity labels')) {
-      $form['auto_entitylabel']['pattern']['#disabled'] = TRUE;
-      $form['auto_entitylabel']['pattern']['#description'] = $this->t('You are not allowed the configure the pattern for the label, because you do not have the %permission permission.', ['%permission' => $this->t('Use PHP for automatic entity label patterns')]);
-    }
-
     // Display the list of available placeholders if token module is installed.
     if ($this->moduleHandler->moduleExists('token')) {
       // Special treatment for Core's taxonomy_vocabulary and taxonomy_term.
@@ -238,15 +231,6 @@ class AutoEntityLabelForm extends ConfigFormBase {
     else {
       $form['auto_entitylabel']['pattern']['#description'] .= ' ' . $this->t('To get a list of available tokens install <a href=":drupal-token" target="blank">Token</a> module.', [':drupal-token' => 'https://www.drupal.org/project/token']);
     }
-
-    $form['auto_entitylabel']['php'] = [
-      '#access' => $this->user->hasPermission('use PHP for auto entity labels'),
-      '#type' => 'checkbox',
-      '#title' => $this->t('Evaluate PHP in pattern.'),
-      '#description' => $this->t('Put PHP code above that returns your string, but make sure you surround code in <code>&lt;?php</code> and <code>?&gt;</code>. Note that <code>$entity</code> and <code>$language</code> are available and can be used by your code.See the help section for an example'),
-      '#default_value' => $config->get('php'),
-      '#states' => $invisible_state,
-    ];
 
     $form['auto_entitylabel']['escape'] = [
       '#type' => 'checkbox',
@@ -267,7 +251,7 @@ class AutoEntityLabelForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->configFactory->getEditable($this->getConfigName());
     $form_state->cleanValues();
-    foreach (['status', 'pattern', 'php', 'escape'] as $key) {
+    foreach (['status', 'pattern', 'escape'] as $key) {
       $config->set($key, $form_state->getValue($key));
     }
 
