@@ -3,7 +3,6 @@
 namespace Drupal\auto_entitylabel\Form;
 
 use Drupal\auto_entitylabel\AutoEntityLabelManager;
-use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
