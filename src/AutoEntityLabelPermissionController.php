@@ -15,27 +15,27 @@ class AutoEntityLabelPermissionController implements ContainerInjectionInterface
   use StringTranslationTrait;
 
   /**
-   * The entity manager.
+   * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * Constructs a new AutoEntityLabelPermissionController instance.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_manager) {
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('entity.manager'));
+    return new static($container->get('entity_type.manager'));
   }
 
   /**
@@ -47,7 +47,7 @@ class AutoEntityLabelPermissionController implements ContainerInjectionInterface
   public function autoEntityLabelPermissions() {
     $permissions = [];
 
-    foreach ($this->entityManager->getDefinitions() as $entity_type_id => $entity_type) {
+    foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
       // Create a permission for each entity type to manage the entity
       // labels.
       if ($entity_type->hasLinkTemplate('auto-label') && $entity_type->hasKey('label')) {

@@ -37,7 +37,12 @@ class AutoEntityLabelForm extends ConfigFormBase {
    */
   protected $configFactory;
 
-  protected $entityManager;
+  /**
+   * The entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
 
   // @codingStandardsIgnoreLine
   protected $route_match;
@@ -82,8 +87,8 @@ class AutoEntityLabelForm extends ConfigFormBase {
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   Config Factory.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_manager
-   *   Entity Manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   Route Match.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
@@ -91,9 +96,9 @@ class AutoEntityLabelForm extends ConfigFormBase {
    * @param \Drupal\Core\Session\AccountInterface $user
    *   Account Interface.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_manager, RouteMatchInterface $route_match, ModuleHandlerInterface $moduleHandler, AccountInterface $user) {
+  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager, RouteMatchInterface $route_match, ModuleHandlerInterface $moduleHandler, AccountInterface $user) {
     parent::__construct($config_factory);
-    $this->entityManager = $entity_manager;
+    $this->entityTypeManager = $entity_type_manager;
     $this->route_match = $route_match;
     $route_options = $this->route_match->getRouteObject()->getOptions();
     $array_keys = array_keys($route_options['parameters']);
@@ -132,9 +137,9 @@ class AutoEntityLabelForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static (
+    return new static(
       $container->get('config.factory'),
-      $container->get('entity.manager'),
+      $container->get('entity_type.manager'),
       $container->get('current_route_match'),
       $container->get('module_handler'),
       $container->get('current_user')
@@ -255,7 +260,7 @@ class AutoEntityLabelForm extends ConfigFormBase {
     }
 
     /** @var \Drupal\Core\Config\Entity\ConfigEntityStorage $storage */
-    $storage = $this->entityManager->getStorage($this->entityType);
+    $storage = $this->entityTypeManager->getStorage($this->entityType);
     /** @var \Drupal\Core\Config\Entity\ConfigEntityType $entity_type */
     $entity_type = $storage->getEntityType();
     $prefix = $entity_type->getConfigPrefix();
