@@ -73,7 +73,7 @@ class AutoEntityLabelTest extends EntityKernelTestBase {
       'uid' => $user->id(),
       'type' => $this->nodeType->id(),
     ]);
-    $this->assertEquals($user->getUsername(), $node->getTitle(), 'The title is set.');
+    $this->assertEquals($user->getAccountName(), $node->getTitle(), 'The title is set.');
   }
 
 }
