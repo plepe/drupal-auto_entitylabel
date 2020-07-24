@@ -12,6 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Class for Config Task.
  */
 class AutoEntityLabelConfigTask extends DeriverBase implements ContainerDeriverInterface {
+
   use StringTranslationTrait;
 
   /**

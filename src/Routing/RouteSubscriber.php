@@ -69,6 +69,8 @@ class RouteSubscriber extends RouteSubscriberBase {
         ]);
       return $route;
     }
+
+    return NULL;
   }
 
   /**
@@ -77,6 +79,7 @@ class RouteSubscriber extends RouteSubscriberBase {
   public static function getSubscribedEvents() {
     $events = parent::getSubscribedEvents();
     $events[RoutingEvents::ALTER] = ['onAlterRoutes', -100];
+
     return $events;
   }
 

@@ -52,7 +52,10 @@ class AutoEntityLabelPermissionController implements ContainerInjectionInterface
       // labels.
       if ($entity_type->hasLinkTemplate('auto-label') && $entity_type->hasKey('label')) {
         $permissions['administer ' . $entity_type_id . ' labels'] = [
-          'title' => $this->t('%entity_label: Administer automatic entity labels', ['%entity_label' => $entity_type->getLabel()]),
+          'title' => $this->t(
+            '%entity_label: Administer automatic entity labels',
+            ['%entity_label' => $entity_type->getLabel()]
+          ),
           'restrict access' => TRUE,
         ];
       }
