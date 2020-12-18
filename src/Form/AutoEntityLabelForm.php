@@ -248,6 +248,21 @@ class AutoEntityLabelForm extends ConfigFormBase {
 
     $form['#attached']['library'][] = 'auto_entitylabel/auto_entitylabel.admin';
 
+    $form['auto_entitylabel']['save'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Re-save'),
+      '#description' => $this->t('Re-save all labels.'),
+      '#default_value' => $config->get('save'),
+    ];
+
+    $form['auto_entitylabel']['chunk'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Chunk size'),
+      '#description' => $this->t('Number of entities to be processed per batch operation.'),
+      '#default_value' => 50,
+      '#min' => 1,
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -257,7 +272,7 @@ class AutoEntityLabelForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->configFactory->getEditable($this->getConfigName());
     $form_state->cleanValues();
-    foreach (['status', 'pattern', 'escape'] as $key) {
+    foreach (['status', 'pattern', 'escape', 'save', 'chunk'] as $key) {
       $config->set($key, $form_state->getValue($key));
     }
 
@@ -266,10 +281,82 @@ class AutoEntityLabelForm extends ConfigFormBase {
     /** @var \Drupal\Core\Config\Entity\ConfigEntityType $entity_type */
     $entity_type = $storage->getEntityType();
     $prefix = $entity_type->getConfigPrefix();
+    $bundle = $entity_type->getBundleOf();
 
     $config->set('dependencies', ['config' => [$prefix . '.' . $this->entityBundle]]);
     $config->save();
+
+    // If user checked the re-save option, set batch for re-saving labels.
+    if ($config->get('save')) {
+      $this->setBatch($this->entityBundle, $bundle, $config->get('chunk'));
+    }
     parent::submitForm($form, $form_state);
+  }
+
+  protected function setBatch($entity_type, $bundle, $chunk) {
+    $ids = $this->getIds($entity_type, $bundle);
+    $chunks = array_chunk($ids, $chunk);
+    $num_chunks = count($chunks);
+
+    // Re-save all labels chunk by chunk.
+    $operations = [];
+    $operation = '';
+    $finished = '';
+    switch ($bundle) {
+      case 'node':
+        $operation = '\Drupal\auto_entitylabel\Batch\ResaveNodeBatch::batchOperation';
+        $finished = '\Drupal\auto_entitylabel\Batch\ResaveNodeBatch::batchFinished';
+        break;
+
+      case 'media':
+        $operation = '\Drupal\auto_entitylabel\Batch\ResaveMediaBatch::batchOperation';
+        $finished = '\Drupal\auto_entitylabel\Batch\ResaveMediaBatch::batchFinished';
+        break;
+
+      case 'comment':
+        $operation = '\Drupal\auto_entitylabel\Batch\ResaveCommentBatch::batchOperation';
+        $finished = '\Drupal\auto_entitylabel\Batch\ResaveCommentBatch::batchFinished';
+        break;
+
+      case 'taxonomy_term':
+        $operation = '\Drupal\auto_entitylabel\Batch\ResaveTermBatch::batchOperation';
+        $finished = '\Drupal\auto_entitylabel\Batch\ResaveTermBatch::batchFinished';
+        break;
+
+    }
+    for ($i = 0; $i < $num_chunks; $i++) {
+      $operations[] = [
+        $operation,
+        [$chunks[$i]],
+      ];
+    }
+
+    $batch = [
+      'title' => $this->t('Re-saving labels'),
+      'progress_message' => $this->t('Completed @current out of @total chunks.'),
+      'finished' => $finished,
+      'operations' => $operations,
+    ];
+
+    batch_set($batch);
+
+  }
+
+  public function getIds($entity_type, $bundle) {
+    $query = $this->entityTypeManager->getStorage($bundle)->getQuery();
+    switch ($bundle) {
+      case 'taxonomy_term':
+        return $query->condition('vid', $entity_type, 'IN')->execute();
+
+      case 'media':
+        return $query->condition('bundle', $entity_type, 'IN')->execute();
+
+      case 'comment':
+        return $query->condition('comment_type', $entity_type, 'IN')->execute();
+
+      default:
+        return $query->condition('type', $entity_type, 'IN')->execute();
+    }
   }
 
 }
