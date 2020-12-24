@@ -300,46 +300,21 @@ class AutoEntityLabelForm extends ConfigFormBase {
 
     // Re-save all labels chunk by chunk.
     $operations = [];
-    $operation = '';
-    $finished = '';
-    switch ($bundle) {
-      case 'node':
-        $operation = '\Drupal\auto_entitylabel\Batch\ResaveNodeBatch::batchOperation';
-        $finished = '\Drupal\auto_entitylabel\Batch\ResaveNodeBatch::batchFinished';
-        break;
-
-      case 'media':
-        $operation = '\Drupal\auto_entitylabel\Batch\ResaveMediaBatch::batchOperation';
-        $finished = '\Drupal\auto_entitylabel\Batch\ResaveMediaBatch::batchFinished';
-        break;
-
-      case 'comment':
-        $operation = '\Drupal\auto_entitylabel\Batch\ResaveCommentBatch::batchOperation';
-        $finished = '\Drupal\auto_entitylabel\Batch\ResaveCommentBatch::batchFinished';
-        break;
-
-      case 'taxonomy_term':
-        $operation = '\Drupal\auto_entitylabel\Batch\ResaveTermBatch::batchOperation';
-        $finished = '\Drupal\auto_entitylabel\Batch\ResaveTermBatch::batchFinished';
-        break;
-
-    }
-    for ($i = 0; $i < $num_chunks; $i++) {
+    for ($chunk_iterator = 0; $chunk_iterator < $num_chunks; $chunk_iterator++) {
       $operations[] = [
-        $operation,
-        [$chunks[$i]],
+        '\Drupal\auto_entitylabel\Batch\ResaveBatch::batchOperation',
+        [$chunks[$chunk_iterator], [$bundle]],
       ];
     }
 
     $batch = [
       'title' => $this->t('Re-saving labels'),
       'progress_message' => $this->t('Completed @current out of @total chunks.'),
-      'finished' => $finished,
-      'operations' => $operations,
+      'finished' => '\Drupal\auto_entitylabel\Batch\ResaveBatch::batchFinished',
+      'operations' => $operations
     ];
 
     batch_set($batch);
-
   }
 
   public function getIds($entity_type, $bundle) {
