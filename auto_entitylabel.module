@@ -141,7 +141,7 @@ function auto_entitylabel_prepare_entityform(array &$form, ContentEntityInterfac
  */
 function auto_entitylabel_entity_prepare_view($entity_type_id, array $entities, array $displays, $view_mode) {
   foreach ($entities as $entity) {
-    if ($entity->in_preview === TRUE && $entity instanceof ContentEntityInterface) {
+    if (isset($entity->in_preview) && $entity->in_preview === TRUE && $entity instanceof ContentEntityInterface) {
       $decorator = \Drupal::service('auto_entitylabel.entity_decorator');
       /** @var \Drupal\auto_entitylabel\AutoEntityLabelManager $decorated_entity */
       $decorated_entity = $decorator->decorate($entity);
