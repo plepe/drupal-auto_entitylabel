@@ -181,17 +181,10 @@ function auto_entitylabel_entity_insert(EntityInterface $entity) {
         || empty($entity->label()) && $decorated_entity->hasOptionalAutoLabel()
       )
     ) {
-      // Store the old label.
-      $old_label = $entity->label();
-      // Update the entity label.
-      $decorated_entity->setLabel();
-      // Save it only if the title has changed.
-      if ($entity->label() != $old_label) {
-        if ($entity->getEntityType()->isRevisionable()) {
-          $entity->setNewRevision(FALSE);
-        }
-        $entity->save();
+      if ($entity->getEntityType()->isRevisionable()) {
+        $entity->setNewRevision(FALSE);
       }
+      $entity->save();
     }
   }
 }
