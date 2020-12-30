@@ -161,7 +161,8 @@ function auto_entitylabel_entity_presave(EntityInterface $entity) {
     $decorator = \Drupal::service('auto_entitylabel.entity_decorator');
     /** @var \Drupal\auto_entitylabel\AutoEntityLabelManager $decorated_entity */
     $decorated_entity = $decorator->decorate($entity);
-    if ($decorated_entity->hasLabel() && $decorated_entity->autoLabelNeeded()) {
+    if ($decorated_entity->hasLabel() && $decorated_entity->autoLabelNeeded()
+      && !$decorated_entity->isTitlePreserved()) {
       $decorated_entity->setLabel();
     }
   }

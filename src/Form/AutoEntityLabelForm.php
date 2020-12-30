@@ -246,6 +246,18 @@ class AutoEntityLabelForm extends ConfigFormBase {
       '#states' => $invisible_state,
     ];
 
+    $form['auto_entitylabel']['preserve_titles'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Preserve already created node titles.'),
+      '#description' => $this->t('Check this to preserve the titles of the nodes that were already created.'),
+      '#default_value' => $config->get('preserve_titles'),
+      '#states' => [
+        'visible' => [
+          ':input[name="status"]' => ['value' => AutoEntityLabelManager::ENABLED],
+        ],
+      ],
+    ];
+
     $form['#attached']['library'][] = 'auto_entitylabel/auto_entitylabel.admin';
 
     $form['auto_entitylabel']['save'] = [
@@ -272,7 +284,7 @@ class AutoEntityLabelForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->configFactory->getEditable($this->getConfigName());
     $form_state->cleanValues();
-    foreach (['status', 'pattern', 'escape', 'save', 'chunk'] as $key) {
+    foreach (['status', 'pattern', 'escape', 'preserve_titles', 'save', 'chunk'] as $key) {
       $config->set($key, $form_state->getValue($key));
     }
 
