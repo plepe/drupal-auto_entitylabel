@@ -4,16 +4,16 @@ namespace Drupal\auto_entitylabel\Form;
 
 use Drupal\auto_entitylabel\AutoEntityLabelManager;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class AutoEntityLabelForm.
+ * Administrative form to enable/configure auto_entitylabel on an entity type.
  */
 class AutoEntityLabelForm extends ConfigFormBase {
 
@@ -284,7 +284,15 @@ class AutoEntityLabelForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->configFactory->getEditable($this->getConfigName());
     $form_state->cleanValues();
-    foreach (['status', 'pattern', 'escape', 'preserve_titles', 'save', 'chunk'] as $key) {
+    foreach (
+      [
+        'status',
+        'pattern',
+        'escape',
+        'preserve_titles',
+        'save',
+        'chunk',
+      ] as $key) {
       $config->set($key, $form_state->getValue($key));
     }
 
@@ -305,6 +313,16 @@ class AutoEntityLabelForm extends ConfigFormBase {
     parent::submitForm($form, $form_state);
   }
 
+  /**
+   * Prepares a batch for resaving all labels.
+   *
+   * @param string $entity_type
+   *   The entity type.
+   * @param string|null $bundle
+   *   The bundle.
+   * @param int $chunk
+   *   The chunk to handle in the batch.
+   */
   protected function setBatch($entity_type, $bundle, $chunk) {
     $ids = $this->getIds($entity_type, $bundle);
     $chunks = array_chunk($ids, $chunk);
@@ -323,12 +341,23 @@ class AutoEntityLabelForm extends ConfigFormBase {
       'title' => $this->t('Re-saving labels'),
       'progress_message' => $this->t('Completed @current out of @total chunks.'),
       'finished' => '\Drupal\auto_entitylabel\Batch\ResaveBatch::batchFinished',
-      'operations' => $operations
+      'operations' => $operations,
     ];
 
     batch_set($batch);
   }
 
+  /**
+   * Get the IDs for for an entity type.
+   *
+   * @param string $entity_type
+   *   The entity type to get the IDs for.
+   * @param string|null $bundle
+   *   The bundle to get the IDs for.
+   *
+   * @return array
+   *   An array with IDs.
+   */
   public function getIds($entity_type, $bundle) {
     $query = $this->entityTypeManager->getStorage($bundle)->getQuery();
     switch ($bundle) {

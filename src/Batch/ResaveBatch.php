@@ -15,7 +15,7 @@ use Drupal\taxonomy\Entity\Term;
 class ResaveBatch {
 
   /**
-   * {@inheritdoc }
+   * {@inheritdoc}
    */
   public static function batchOperation(array $chunk, array $bundle, array &$context) {
     foreach ($chunk as $id) {
@@ -45,7 +45,7 @@ class ResaveBatch {
   }
 
   /**
-   * {@inheritdoc }
+   * {@inheritdoc}
    */
   public static function batchFinished($success, array $results, array $operations) {
     $messenger = \Drupal::messenger();
