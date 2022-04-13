@@ -395,8 +395,7 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
    * @return bool
    *   TRUE if the label is rendered in the entity form, FALSE otherwise.
    *
-   * @todo
-   *   Find a generic way of determining the result of this function. This
+   * @todo Find a generic way of determining the result of this function. This
    *   will probably require access to more information about entity forms
    *   (entity api module?).
    *
