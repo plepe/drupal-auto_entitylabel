@@ -52,7 +52,7 @@ class AutoEntityLabelFormTest extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'user',
     'node',
@@ -64,7 +64,7 @@ class AutoEntityLabelFormTest extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->configFactory = $this->container->get('config.factory');

@@ -37,7 +37,7 @@ class AutoEntityLabelBatchTest extends WebDriverTestBase {
   /**
    * Node storage variable.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var \Drupal\node\NodeStorageInterface
    */
   protected $nodeStorage;
 
@@ -46,7 +46,7 @@ class AutoEntityLabelBatchTest extends WebDriverTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'user',
     'node',
@@ -63,7 +63,7 @@ class AutoEntityLabelBatchTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->user = $this->drupalCreateUser([], '', TRUE);
@@ -79,9 +79,11 @@ class AutoEntityLabelBatchTest extends WebDriverTestBase {
    * Tests that re-save batch works correctly.
    */
   public function testBatchProcess() {
+    /** @var \Drupal\FunctionalJavascriptTests\JSWebAssert $webAssert */
     $webAssert = $this->assertSession();
     $this->createTestNodes(10, 'page');
     $pagesIDs = $this->nodeStorage->getQuery()
+      ->accessCheck(FALSE)
       ->condition('type', 'page')->execute();
     foreach ($this->nodeStorage->loadMultiple($pagesIDs) as $index => $page) {
       $this->assertEquals('Testing node page ' . ($index - 1), $page->get('title')->value);
@@ -102,7 +104,7 @@ class AutoEntityLabelBatchTest extends WebDriverTestBase {
       'save' => TRUE,
       'chunk' => 5,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save configuration');
+    $this->submitForm($edit, 'Save configuration');
     $webAssert->assertWaitOnAjaxRequest();
     $webAssert->pageTextContains('The configuration options have been saved.');
     $webAssert->pageTextContains('Resaved 10 labels.');

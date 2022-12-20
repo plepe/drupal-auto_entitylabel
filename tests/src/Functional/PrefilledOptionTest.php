@@ -39,7 +39,7 @@ class PrefilledOptionTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'user',
     'node',
@@ -56,7 +56,7 @@ class PrefilledOptionTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->user = $this->drupalCreateUser([], '', TRUE);

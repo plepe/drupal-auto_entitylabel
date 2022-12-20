@@ -13,6 +13,7 @@ use Drupal\Tests\BrowserTestBase;
  * @requires module token
  */
 class PreserveTitlesOptionTest extends BrowserTestBase {
+
   /**
    * Node type.
    *
@@ -37,7 +38,7 @@ class PreserveTitlesOptionTest extends BrowserTestBase {
   /**
    * Node storage variable.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var \Drupal\node\NodeStorageInterface
    */
   protected $nodeStorage;
 
@@ -46,7 +47,7 @@ class PreserveTitlesOptionTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'user',
     'node',
@@ -63,7 +64,7 @@ class PreserveTitlesOptionTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->user = $this->drupalCreateUser([], '', TRUE);

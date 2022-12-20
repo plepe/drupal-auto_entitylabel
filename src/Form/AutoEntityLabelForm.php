@@ -359,7 +359,7 @@ class AutoEntityLabelForm extends ConfigFormBase {
    *   An array with IDs.
    */
   public function getIds($entity_type, $bundle) {
-    $query = $this->entityTypeManager->getStorage($bundle)->getQuery();
+    $query = $this->entityTypeManager->getStorage($bundle)->getQuery()->accessCheck(TRUE);
     switch ($bundle) {
       case 'taxonomy_term':
         return $query->condition('vid', $entity_type, 'IN')->execute();
