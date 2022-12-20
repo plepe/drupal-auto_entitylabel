@@ -227,7 +227,7 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
     $pattern = $this->getConfig('pattern') ?: '';
     $pattern = trim($pattern);
 
-    return $pattern;
+    return $this->t('@pattern', ['@pattern' => $pattern]);
   }
 
   /**
