@@ -214,9 +214,11 @@ class AutoEntityLabelForm extends ConfigFormBase {
       '#type' => 'radios',
       '#title' => $this->t('Generator to use for generating labels'),
       '#description' => $this->t('There are several generators for rendering labels available:') . '<br>' .
-        $this->t('Tokens: e.g. <code>[node:field_name]</code>'),
+        $this->t('Tokens: e.g. <code>[node:field_name]</code>') . '<br>' .
+        $this->t('Twig templates: e.g. <code>{{ entity.field_name[0].value }}</code>'),
       '#options' => [
         'token' => $this->t('Token'),
+        'twig' => $this->t('Twig Template'),
       ],
       '#default_value' => $config->get('generator') ?: 'token',
     ];

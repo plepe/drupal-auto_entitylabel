@@ -297,7 +297,26 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
     // @see https://www.drupal.org/project/auto_entitylabel/issues/3051165
     $metadata = new BubbleableMetadata();
 
-    if ($this->getConfig('generator') === 'token') {
+    if ($this->getConfig('generator') === 'twig') {
+      // prepare the render context for a Twig template
+      $render = [
+        '#type' => 'inline_template',
+        '#template' => $pattern,
+        '#context' => [
+          'entity' => $entity,
+        ]
+      ];
+
+      // render the pattern - if an error occurs, create a logger entry
+      try {
+        $output = \Drupal::service('renderer')->render($render);
+      }
+      catch (\Exception $e) {
+        \Drupal::logger('auto_entitylabel')->error('Error rendering pattern: @message', ['@message' => $e->getMessage()]);
+      }
+
+    }
+    else {
       // Use tokens for rendering the pattern
       $output = $this->token->replace($pattern,
         [$entity_type => $entity],

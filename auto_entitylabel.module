@@ -29,6 +29,8 @@ function auto_entitylabel_help($route_name, RouteMatchInterface $route_match) {
           ]) . '</p>';
       $output .= '<h3>' . t('Usage') . '</h3>';
       $output .= '<p>' . t('The configuration can be accessed with the <i>Manage automatic entity labels</i> operation or the <i>Automatic label</i> tab when editing entity types. For example, when configuring a node type, visit <i>Administration</i> » <i>Structure</i> » <i>Content types</i> (/admin/structure/types). You can also configure automatic labels for other entity types such as <i>Media<i>, in which case you would visit <i>Administration</i> » <i>Structure</i> » <i>Media</i> (/admin/structure/media).') . '</p>';
+      $output .= '<p>' . t('Advanced users can use Twig templates for automatically generating labels. See below for an example.') . '</p>';
+      $output .= '<code>{{ entity.field_name[0].value|default(entity.nid[0].value) }}</code>';
 
       return $output;
   }
