@@ -8,6 +8,9 @@ auto_entitylabel.settings.*:
     pattern:
       type: string
       label: 'Pattern for the label'
+    generator:
+      type: string
+      label: 'Generator to use for generating labels (token)'
     escape:
       type: boolean
       label: 'Remove special characters'

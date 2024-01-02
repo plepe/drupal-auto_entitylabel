@@ -296,11 +296,15 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
     // metadata to the token replacement.
     // @see https://www.drupal.org/project/auto_entitylabel/issues/3051165
     $metadata = new BubbleableMetadata();
-    $output = $this->token->replace($pattern,
-      [$entity_type => $entity],
-      ['clear' => TRUE],
-      $metadata
-    );
+
+    if ($this->getConfig('generator') === 'token') {
+      // Use tokens for rendering the pattern
+      $output = $this->token->replace($pattern,
+        [$entity_type => $entity],
+        ['clear' => TRUE],
+        $metadata
+      );
+    }
 
     // Decode HTML entities, returning them to their original UTF-8 characters.
     $output = Html::decodeEntities($output);

@@ -210,6 +210,17 @@ class AutoEntityLabelForm extends ConfigFormBase {
     ];
     $form['auto_entitylabel']['status'] += $options_description;
 
+    $form['auto_entitylabel']['generator'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Generator to use for generating labels'),
+      '#description' => $this->t('There are several generators for rendering labels available:') . '<br>' .
+        $this->t('Tokens: e.g. <code>[node:field_name]</code>'),
+      '#options' => [
+        'token' => $this->t('Token'),
+      ],
+      '#default_value' => $config->get('generator') ?: 'token',
+    ];
+
     $form['auto_entitylabel']['pattern'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Pattern for the label'),
@@ -289,6 +300,7 @@ class AutoEntityLabelForm extends ConfigFormBase {
       [
         'status',
         'pattern',
+        'generator',
         'escape',
         'preserve_titles',
         'save',
