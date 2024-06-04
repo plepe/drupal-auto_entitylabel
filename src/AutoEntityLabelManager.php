@@ -126,7 +126,7 @@ class AutoEntityLabelManager implements AutoEntityLabelManagerInterface {
     ConfigFactoryInterface $config_factory,
     EntityTypeManagerInterface $entity_type_manager,
     Token $token,
-    ModuleHandlerInterface $module_handler
+    ModuleHandlerInterface $module_handler,
   ) {
     $this->entity = $entity;
     $this->entityType = $entity->getEntityType()->id();

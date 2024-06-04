@@ -6,18 +6,12 @@
  */
 
 /**
- * @file
- * Extending the auto_entitylabel module.
- */
-
-/**
  * Implements hook_entity_type_alter().
  *
  * These examples shows how to alter any existing entity type to provide
  * auto_entitylabel support.
  */
 function hook_entity_type_alter(array &$entity_types) {
-
   // Enable auto_entitylabel for a single custom entity type named "MYTYPE".
   foreach ($entity_types as $entity_type) {
     if ($entity_type->getBundleOf() == 'MYTYPE') {
