@@ -47,6 +47,8 @@ information, see
 
 
 ## Maintainers
+[//]: # cSpell:disable
+[//]: # Do not add maintainers to cspell-project-words file
 
 Current maintainers:
 - Benedikt Forchhammer [@bforchhammer](https://www.drupal.org/u/bforchhammer)
@@ -57,3 +59,4 @@ Current maintainers:
 - Pravin raj [@Pravin Ajaaz](https://www.drupal.org/u/pravin-ajaaz)
 - Purushotam Rai [@purushotam.rai](https://www.drupal.org/u/purushotamrai)
 - Vladimir Roudakov [@VladimirAus](https://www.drupal.org/u/vladimiraus)
+- Martin Anderson-Clutz [@mandclu](https://www.drupal.org/u/mandclu)
