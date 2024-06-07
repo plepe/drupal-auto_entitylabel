@@ -7,9 +7,12 @@ include:
       - '/includes/include.drupalci.workflows.yml'
 
 variables:
-  OPT_IN_TEST_CURRENT: 0
+  # Broaden test coverage.
+  OPT_IN_TEST_PREVIOUS_MINOR: 1
+  OPT_IN_TEST_CURRENT: 1
   OPT_IN_TEST_NEXT_MINOR: 1
   OPT_IN_TEST_NEXT_MAJOR: 1
+  OPT_IN_TEST_MAX_PHP: 1
 phpcs:
   allow_failure: false
 phpstan:
@@ -17,7 +20,7 @@ phpstan:
 phpstan (next minor):
   allow_failure: false
 phpstan (next major):
-  allow_failure: true
+  allow_failure: false
 phpunit (next minor):
   allow_failure: false
 phpunit (next major):

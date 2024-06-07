@@ -44,7 +44,7 @@ class EntityLabelNotNullConstraintValidator extends NotNullConstraintValidator i
   /**
    * {@inheritdoc}
    */
-  public function validate($value, Constraint $constraint) {
+  public function validate($value, Constraint $constraint): void {
     $typed_data = $this->getTypedData();
     if ($typed_data instanceof FieldItemList && $typed_data->isEmpty()) {
       $entity = $typed_data->getEntity();
