@@ -365,20 +365,10 @@ class AutoEntityLabelForm extends ConfigFormBase {
    *   An array with IDs.
    */
   public function getIds($entity_type, $bundle) {
+    $type_definition = $this->entityTypeManager->getDefinition($bundle);
+    $bundle_field = $type_definition->getKey('bundle');
     $query = $this->entityTypeManager->getStorage($bundle)->getQuery()->accessCheck(TRUE);
-    switch ($bundle) {
-      case 'taxonomy_term':
-        return $query->condition('vid', $entity_type, 'IN')->execute();
-
-      case 'media':
-        return $query->condition('bundle', $entity_type, 'IN')->execute();
-
-      case 'comment':
-        return $query->condition('comment_type', $entity_type, 'IN')->execute();
-
-      default:
-        return $query->condition('type', $entity_type, 'IN')->execute();
-    }
+    return $query->condition($bundle_field, $entity_type, 'IN')->execute();
   }
 
 }
